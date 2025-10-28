@@ -11,8 +11,7 @@ class AddCompanyPage extends StatefulWidget {
   State<AddCompanyPage> createState() => _AddCompanyPageState();
 }
 
-class _AddCompanyPageState extends State<AddCompanyPage>
-    with TickerProviderStateMixin {
+class _AddCompanyPageState extends State<AddCompanyPage> {
   final _formKey = GlobalKey<FormState>();
 
   // Text controllers
@@ -25,11 +24,6 @@ class _AddCompanyPageState extends State<AddCompanyPage>
   final _descriptionController = TextEditingController();
   final _foundedYearController = TextEditingController();
   final _employeeCountController = TextEditingController();
-
-  // Animation controllers
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   // Form state
   String? _selectedSector;
@@ -117,32 +111,12 @@ class _AddCompanyPageState extends State<AddCompanyPage>
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
-
-    _animationController.forward();
-
     // Set default values
     _selectedCountry = 'Türkiye';
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     _companyNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -159,19 +133,20 @@ class _AddCompanyPageState extends State<AddCompanyPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          return FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: SingleChildScrollView(
-                child: Column(children: [_buildPageHeader(), _buildFormCard()]),
+      extendBodyBehindAppBar: false,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              _buildPageHeader(),
+              Container(
+                color: const Color(0xFFF8F9FA),
+                child: _buildFormCard(),
               ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -179,25 +154,24 @@ class _AddCompanyPageState extends State<AddCompanyPage>
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0xFF1976D2),
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFF1976D2),
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
       leading: IconButton(
         onPressed: () => Navigator.of(context).pop(),
         icon: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white.withOpacity(0.2),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
           ),
           child: const Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black87,
+            color: Colors.white,
             size: 18,
           ),
         ),
@@ -205,7 +179,7 @@ class _AddCompanyPageState extends State<AddCompanyPage>
       title: const Text(
         'Yeni Firma Ekle',
         style: TextStyle(
-          color: Colors.black87,
+          color: Colors.white,
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),
@@ -218,16 +192,7 @@ class _AddCompanyPageState extends State<AddCompanyPage>
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF1976D2),
-            const Color(0xFF1976D2).withOpacity(0.8),
-          ],
-        ),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF1976D2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

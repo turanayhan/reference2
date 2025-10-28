@@ -9,12 +9,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
+class _ProfilePageState extends State<ProfilePage> {
   // User data - normalde API'den gelir
   Map<String, dynamic> userData = {
     'name': 'Ahmet Yılmaz',
@@ -29,53 +24,22 @@ class _ProfilePageState extends State<ProfilePage>
   };
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
-
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-        );
-
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: const Color(0xFF1976D2),
       extendBodyBehindAppBar: false,
       body: SafeArea(
-        child: AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            return FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [_buildProfileHeader(), _buildProfileContent()],
-                  ),
-                ),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              _buildProfileHeader(),
+              Container(
+                color: const Color(0xFFF8F9FA),
+                child: _buildProfileContent(),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );
@@ -182,32 +146,26 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget _buildProfileContent() {
-    return Transform.translate(
-      offset: const Offset(0, -24),
-      child: Container(
-        margin: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 30,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 32),
-            _buildStatsSection(),
-            _buildDivider(),
-            _buildInfoSection(),
-            _buildDivider(),
-            _buildActionSection(),
-            const SizedBox(height: 32),
-          ],
-        ),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildStatsSection(),
+          _buildInfoSection(),
+          _buildActionSection(),
+        ],
       ),
     );
   }

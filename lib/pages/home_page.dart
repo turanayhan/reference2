@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/menu_models.dart';
 
 class HomePage extends StatelessWidget {
-  final MenuItem selectedMenuItem;
 
-  const HomePage({Key? key, required this.selectedMenuItem}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +19,13 @@ class HomePage extends StatelessWidget {
               const SizedBox(width: 4),
               Icon(Icons.chevron_right, size: 16, color: Colors.grey[400]),
               const SizedBox(width: 4),
-              Text(
-                _getPageTitle(),
-                style: TextStyle(color: Colors.grey[600], fontSize: 14),
-              ),
+              
             ],
           ),
 
           const SizedBox(height: 24),
 
-          Text(
-            _getPageMainTitle(),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
+         
 
           const SizedBox(height: 16),
 
@@ -105,43 +94,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  String _getPageTitle() {
-    switch (selectedMenuItem) {
-      case MenuItem.anasayfa:
-        return 'Anasayfa';
-      case MenuItem.uygulamalar:
-        return 'Uygulamalar';
-      case MenuItem.firmalarim:
-        return 'Firmalarım';
-      case MenuItem.kullanicilarim:
-        return 'Kullanıcılarım';
-      case MenuItem.profil:
-        return 'Profil';
-      case MenuItem.aboneliklerim:
-        return 'Aboneliklerim';
-      case MenuItem.talepDestek:
-        return 'Talep ve Destek';
-    }
-  }
+ 
 
-  String _getPageMainTitle() {
-    switch (selectedMenuItem) {
-      case MenuItem.anasayfa:
-        return 'Sık Kullanılan Uygulamalar';
-      case MenuItem.uygulamalar:
-        return 'Tüm Uygulamalarım';
-      case MenuItem.firmalarim:
-        return 'Firma Listesi';
-      case MenuItem.kullanicilarim:
-        return 'Kullanıcı Yönetimi';
-      case MenuItem.profil:
-        return 'Profil Bilgilerim';
-      case MenuItem.aboneliklerim:
-        return 'Abonelik Listesi';
-      case MenuItem.talepDestek:
-        return 'Destek Talepleri';
-    }
-  }
+
 
   Widget _buildDashboardCard({
     required String title,

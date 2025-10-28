@@ -60,12 +60,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: const Color(0xFF1976D2),
       appBar: _buildAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(children: [_buildPageHeader(), _buildFormCard()]),
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              _buildPageHeader(),
+              Container(
+                color: const Color(0xFFF8F9FA),
+                child: _buildFormCard(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -87,16 +95,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF1976D2),
-            const Color(0xFF1976D2).withOpacity(0.8),
-          ],
-        ),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF1976D2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -162,203 +161,201 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildFormCard() {
-    return Transform.translate(
-      offset: const Offset(0, -24),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 30,
-              offset: const Offset(0, 10),
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 32),
-
-              // Profile Avatar Section
-              _buildAvatarSection(),
-
-              const SizedBox(height: 32),
-
-              // Personal Information Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildSectionTitle('👤 Kişisel Bilgiler'),
-              ),
-              const SizedBox(height: 24),
-
-              // Name field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: CustomTextField(
-                  controller: _nameController,
-                  label: 'Ad Soyad',
-                  hint: 'Adınızı ve soyadınızı girin',
-                  icon: Icons.person_outline,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ad soyad zorunludur';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Email field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: CustomTextField(
-                  controller: _emailController,
-                  label: 'E-posta',
-                  hint: 'E-posta adresinizi girin',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'E-posta zorunludur';
-                    }
-                    if (!RegExp(
-                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value)) {
-                      return 'Geçerli bir e-posta adresi girin';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Phone field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: CustomTextField(
-                  controller: _phoneController,
-                  label: 'Telefon',
-                  hint: 'Telefon numaranızı girin',
-                  icon: Icons.phone_outlined,
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Telefon numarası zorunludur';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // Work Information Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildSectionTitle('🏢 İş Bilgileri'),
-              ),
-              const SizedBox(height: 24),
-
-              // Position field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: CustomTextField(
-                  controller: _positionController,
-                  label: 'Pozisyon',
-                  hint: 'İş pozisyonunuzu girin',
-                  icon: Icons.work_outline,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Pozisyon zorunludur';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Department dropdown
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: DropdownButtonFormField<String>(
-                  value: _selectedDepartment,
-                  decoration: InputDecoration(
-                    labelText: 'Departman',
-                    hintText: 'Departmanınızı seçin',
-                    prefixIcon: const Icon(Icons.business_center_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Color(0xFF1976D2)),
-                    ),
-                  ),
-                  items: _departments.map((department) {
-                    return DropdownMenuItem(
-                      value: department,
-                      child: Text(department),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedDepartment = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Departman seçimi zorunludur';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Location field
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: CustomTextField(
-                  controller: _locationController,
-                  label: 'Konum',
-                  hint: 'Bulunduğunuz şehri girin',
-                  icon: Icons.location_on_outlined,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Konum zorunludur';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Action buttons
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildActionButtons(),
-              ),
-
-              const SizedBox(height: 40),
-            ],
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 30,
+            offset: const Offset(0, 10),
+            spreadRadius: 0,
           ),
+        ],
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 32),
+
+            // Profile Avatar Section
+            _buildAvatarSection(),
+
+            const SizedBox(height: 32),
+
+            // Personal Information Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: _buildSectionTitle('👤 Kişisel Bilgiler'),
+            ),
+            const SizedBox(height: 24),
+
+            // Name field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomTextField(
+                controller: _nameController,
+                label: 'Ad Soyad',
+                hint: 'Adınızı ve soyadınızı girin',
+                icon: Icons.person_outline,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Ad soyad zorunludur';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Email field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomTextField(
+                controller: _emailController,
+                label: 'E-posta',
+                hint: 'E-posta adresinizi girin',
+                icon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'E-posta zorunludur';
+                  }
+                  if (!RegExp(
+                    r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                  ).hasMatch(value)) {
+                    return 'Geçerli bir e-posta adresi girin';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Phone field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomTextField(
+                controller: _phoneController,
+                label: 'Telefon',
+                hint: 'Telefon numaranızı girin',
+                icon: Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Telefon numarası zorunludur';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // Work Information Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: _buildSectionTitle('🏢 İş Bilgileri'),
+            ),
+            const SizedBox(height: 24),
+
+            // Position field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomTextField(
+                controller: _positionController,
+                label: 'Pozisyon',
+                hint: 'İş pozisyonunuzu girin',
+                icon: Icons.work_outline,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Pozisyon zorunludur';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Department dropdown
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: DropdownButtonFormField<String>(
+                value: _selectedDepartment,
+                decoration: InputDecoration(
+                  labelText: 'Departman',
+                  hintText: 'Departmanınızı seçin',
+                  prefixIcon: const Icon(Icons.business_center_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Color(0xFF1976D2)),
+                  ),
+                ),
+                items: _departments.map((department) {
+                  return DropdownMenuItem(
+                    value: department,
+                    child: Text(department),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedDepartment = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Departman seçimi zorunludur';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Location field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: CustomTextField(
+                controller: _locationController,
+                label: 'Konum',
+                hint: 'Bulunduğunuz şehri girin',
+                icon: Icons.location_on_outlined,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Konum zorunludur';
+                  }
+                  return null;
+                },
+              ),
+            ),
+
+            const SizedBox(height: 40),
+
+            // Action buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: _buildActionButtons(),
+            ),
+
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );
